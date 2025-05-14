@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "name": "Sensor de Pressão 1",
+    "value": 5.2,
+    "status": "OK",
+    "history": [
+      { "timestamp": "2025-05-13T14:00:00", "value": 5.0 },
+      { "timestamp": "2025-05-13T14:01:00", "value": 5.1 },
+      { "timestamp": "2025-05-13T14:02:00", "value": 5.2 }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Sensor de Fluxo 1",
+    "value": 12.5,
+    "status": "Alerta",
+    "history": [
+      { "timestamp": "2025-05-13T14:00:00", "value": 12.0 },
+      { "timestamp": "2025-05-13T14:01:00", "value": 12.3 },
+      { "timestamp": "2025-05-13T14:02:00", "value": 12.5 }
+    ]
+  }
+]
