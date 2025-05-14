@@ -1,84 +1,62 @@
 // src/screens/SensorDetailScreen.tsx
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import SensorChart from '../components/SensorChart';
+import SensorInfo from '../components/SensorInfo';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SensorDetail'>;
 
-const generateRandomValues = () =>
-  Array.from({ length: 10 }, () => Math.floor(Math.random() * 100));
-
-export default function SensorDetailScreen({ route }: Props) {
-  const { id, name } = route.params;
-  const [values, setValues] = useState<number[]>([]);
+export default function SensorDetailScreen({ route, navigation }: Props) {
+  const { id } = route.params;
+  const [sensorData, setSensorData] = useState<number[]>([]);
+  const [status, setStatus] = useState<string>('Ativo');
 
   useEffect(() => {
-    setValues(generateRandomValues());
-  }, [id]);
-
-  const calculateAverage = (arr: number[]) =>
-    arr.reduce((a, b) => a + b, 0) / arr.length;
+    // Simular histórico de dados
+    const data = Array.from({ length: 10 }, () => Math.floor(Math.random() * 100));
+    setSensorData(data);
+  }, []);
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>{name}</Text>
+      {/* Botão Voltar */}
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <Text style={styles.backButtonText}>◀ Voltar</Text>
+      </TouchableOpacity>
 
-      {/* Novo componente gráfico */}
-      {values.length > 0 && <SensorChart data={values} />}
+      {/* Gráfico */}
+      <SensorChart data={sensorData} />
 
-      <View style={styles.infoBox}>
-        <Text style={styles.infoTitle}>Último Valor:</Text>
-        <Text style={styles.infoValue}>{values[values.length - 1]}</Text>
-      </View>
-
-      <View style={styles.infoBox}>
-        <Text style={styles.infoTitle}>Média dos Valores:</Text>
-        <Text style={styles.infoValue}>
-          {values.length > 0 ? calculateAverage(values).toFixed(2) : 'N/A'}
-        </Text>
-      </View>
-
-      <View style={styles.infoBox}>
-        <Text style={styles.infoTitle}>Valor Máximo:</Text>
-        <Text style={styles.infoValue}>
-          {values.length > 0 ? Math.max(...values) : 'N/A'}
-        </Text>
-      </View>
-
-      <View style={styles.infoBox}>
-        <Text style={styles.infoTitle}>Valor Mínimo:</Text>
-        <Text style={styles.infoValue}>
-          {values.length > 0 ? Math.min(...values) : 'N/A'}
-        </Text>
-      </View>
-
-      <View style={styles.historyBox}>
-        <Text style={styles.historyTitle}>Histórico de Valores:</Text>
-        <Text style={styles.historyText}>{values.join(', ')}</Text>
-      </View>
+      {/* Informações do sensor */}
+      <SensorInfo
+        id={id}
+        name={`Sensor #${id}`}
+        status={status}
+        lastUpdated={new Date().toLocaleString()}
+      />
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f0f2f5', padding: 20 },
-  title: { fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 20 },
-  infoBox: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+  container: {
+    flex: 1,
+    backgroundColor: '#001F3F',
   },
-  infoTitle: { fontSize: 16, fontWeight: '600', color: '#555' },
-  infoValue: { fontSize: 18, fontWeight: 'bold', color: '#000', marginTop: 4 },
-  historyBox: { marginTop: 20 },
-  historyTitle: { fontSize: 16, fontWeight: '600', marginBottom: 4 },
-  historyText: { fontSize: 14, color: '#333' },
+  backButton: {
+    marginTop: 20,
+    marginLeft: 16,
+    backgroundColor: '#0052cc',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    alignSelf: 'flex-start',
+  },
+  backButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
 });

@@ -1,39 +1,42 @@
 // src/components/SensorChart.tsx
 import React from 'react';
-import { View, Dimensions, StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet, View, Text } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 
-type SensorChartProps = {
+interface SensorChartProps {
   data: number[];
-};
+}
 
 export default function SensorChart({ data }: SensorChartProps) {
+  const screenWidth = Dimensions.get('window').width;
+
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Histórico do Sensor</Text>
       <LineChart
         data={{
           labels: data.map((_, index) => (index + 1).toString()),
           datasets: [{ data }],
         }}
-        width={Dimensions.get('window').width - 32} // largura do gráfico
+        width={screenWidth - 40} // largura do gráfico
         height={220}
         yAxisSuffix=""
         chartConfig={{
-          backgroundColor: '#ffffff',
-          backgroundGradientFrom: '#ffffff',
-          backgroundGradientTo: '#ffffff',
-          decimalPlaces: 2,
-          color: (opacity = 1) => `rgba(33, 150, 243, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+          backgroundColor: '#007BFF',
+          backgroundGradientFrom: '#007BFF',
+          backgroundGradientTo: '#00BFFF',
+          decimalPlaces: 0,
+          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
           style: { borderRadius: 16 },
           propsForDots: {
             r: '4',
             strokeWidth: '2',
-            stroke: '#2196f3',
+            stroke: '#fff',
           },
         }}
         bezier
-        style={{ borderRadius: 16 }}
+        style={styles.chart}
       />
     </View>
   );
@@ -41,7 +44,16 @@ export default function SensorChart({ data }: SensorChartProps) {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
     marginVertical: 16,
+    alignItems: 'center',
+  },
+  chart: {
+    borderRadius: 16,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 8,
   },
 });

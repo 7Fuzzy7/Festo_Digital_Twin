@@ -1,8 +1,10 @@
 // src/screens/SensorListScreen.tsx
 import React from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Pressable } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
+import { Ionicons } from '@expo/vector-icons';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SensorList'>;
 
@@ -15,21 +17,24 @@ const mockSensors = [
 export default function SensorListScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Sensores</Text>
       <FlatList
         data={mockSensors}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.item}
-            onPress={() =>
-              navigation.navigate('SensorDetail', {
-                id: item.id,
-                name: item.name, // 👉 Envia também o name
-              })
-            }
-          >
-            <Text style={styles.text}>{item.name}</Text>
-          </TouchableOpacity>
+        contentContainerStyle={{ paddingBottom: 20 }}
+        renderItem={({ item, index }) => (
+          <Animated.View entering={FadeInDown.delay(index * 100).duration(500)}>
+            <Pressable
+              style={({ pressed }) => [
+                styles.card,
+                pressed && { transform: [{ scale: 0.98 }], opacity: 0.9 },
+              ]}
+              onPress={() => navigation.navigate('SensorDetail', { id: item.id, name: item.name })}
+            >
+              <Text style={styles.cardText}>{item.name}</Text>
+              <Ionicons name="chevron-forward" size={24} color="#007BFF" />
+            </Pressable>
+          </Animated.View>
         )}
       />
     </View>
@@ -37,21 +42,35 @@ export default function SensorListScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, backgroundColor: '#f0f2f5' },
-  item: {
-    padding: 16,
+  container: {
+    flex: 1,
+    backgroundColor: '#007BFF',
+    paddingTop: 60,
+    paddingHorizontal: 16,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  card: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     backgroundColor: '#fff',
-    borderRadius: 8,
+    padding: 18,
+    borderRadius: 12,
     marginBottom: 12,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowRadius: 6,
+    elevation: 5,
   },
-  text: {
-    fontSize: 16,
-    fontWeight: '600',
+  cardText: {
+    fontSize: 18,
     color: '#333',
+    fontWeight: '500',
   },
 });
