@@ -1,44 +1,32 @@
-import { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { fetchSensorById } from '../services/api';
 import { Sensor } from '../types/sensor';
-import { VictoryLine } from 'victory-native';
+import SensorChart from '../components/SensorChart';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SensorDetail'>;
 
-const SensorDetailScreen = ({ route }: Props) => {
-  const { sensorId } = route.params;
+export default function SensorDetailScreen({ route }: Props) {
   const [sensor, setSensor] = useState<Sensor | null>(null);
+  const { id } = route.params;
 
   useEffect(() => {
-    loadSensor();
-  }, []);
+    fetchSensorById(id).then(setSensor);
+  }, [id]);
 
-  const loadSensor = async () => {
-    const data = await fetchSensorById(sensorId);
-    setSensor(data);
-  };
-
-  if (!sensor) return <Text>Carregando...</Text>;
+  if (!sensor) return <ActivityIndicator style={{ flex: 1 }} />;
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{sensor.name}</Text>
-      <Text>Valor Atual: {sensor.value}</Text>
-      <Text>Status: {sensor.status}</Text>
-      <Text style={styles.subtitle}>Histórico</Text>
-      <VictoryLine data={sensor.history.map((h) => ({ x: new Date(h.timestamp), y: h.value }))} style={{ data: { stroke: '#007AFF' } }} />
-      <Button title="Atualizar" onPress={loadSensor} />
+      <SensorChart data={sensor.history} />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 },
-  subtitle: { fontSize: 18, marginTop: 20, marginBottom: 10 },
+  container: { flex: 1, padding: 16 },
+  title: { fontSize: 20, fontWeight: 'bold', marginBottom: 20 },
 });
-
-export default SensorDetailScreen;

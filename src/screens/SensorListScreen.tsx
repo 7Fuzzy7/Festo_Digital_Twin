@@ -1,53 +1,36 @@
-import { useState, useEffect } from 'react';
-import { View, FlatList, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
-import { fetchSensors } from '../services/api';
-import { Sensor } from '../types/sensor';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SensorList'>;
 
-const SensorListScreen = ({ navigation }: Props) => {
-  const [sensors, setSensors] = useState<Sensor[]>([]);
+const mockSensors = [
+  { id: '1', name: 'Sensor de Pressão' },
+  { id: '2', name: 'Sensor de Fluxo' },
+  { id: '3', name: 'Sensor de Temperatura' },
+];
 
-  useEffect(() => {
-    loadSensors();
-  }, []);
-
-  const loadSensors = async () => {
-    const data = await fetchSensors();
-    setSensors(data);
-  };
-
-  const renderItem = ({ item }: { item: Sensor }) => (
-    <TouchableOpacity
-      style={styles.item}
-      onPress={() => navigation.navigate('SensorDetail', { sensorId: item.id })}
-    >
-      <Text style={styles.name}>{item.name}</Text>
-      <Text>Valor: {item.value}</Text>
-      <Text style={item.status === 'OK' ? styles.ok : styles.alert}>Status: {item.status}</Text>
-    </TouchableOpacity>
-  );
-
+export default function SensorListScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
-      <FlatList data={sensors} keyExtractor={(item) => item.id.toString()} renderItem={renderItem} />
-      <TouchableOpacity style={styles.settingsButton} onPress={() => navigation.navigate('Settings')}>
-        <Text style={styles.settingsText}>Configurações</Text>
-      </TouchableOpacity>
+      <FlatList
+        data={mockSensors}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.item}
+            onPress={() => navigation.navigate('SensorDetail', { id: item.id })}
+          >
+            <Text>{item.name}</Text>
+          </TouchableOpacity>
+        )}
+      />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 10 },
-  item: { padding: 15, borderBottomWidth: 1, borderBottomColor: '#ccc' },
-  name: { fontSize: 18, fontWeight: 'bold' },
-  ok: { color: 'green' },
-  alert: { color: 'red' },
-  settingsButton: { padding: 15, backgroundColor: '#007AFF', alignItems: 'center' },
-  settingsText: { color: '#fff', fontSize: 16 },
+  container: { flex: 1, padding: 16 },
+  item: { padding: 16, backgroundColor: '#eee', marginBottom: 10, borderRadius: 5 },
 });
-
-export default SensorListScreen;

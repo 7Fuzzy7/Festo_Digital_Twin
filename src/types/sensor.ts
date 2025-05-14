@@ -1,7 +1,5 @@
-export interface Sensor {
-  id: number;
+export type Sensor = {
+  id: string;
   name: string;
-  value: number;
-  status: 'OK' | 'Alerta';
-  history: { timestamp: string; value: number }[];
-}
+  history: number[];
+};
