@@ -1,6 +1,5 @@
-// src/components/SensorChart.tsx
 import React from 'react';
-import { Dimensions, StyleSheet, View, Text } from 'react-native';
+import { View, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 
 interface SensorChartProps {
@@ -11,49 +10,35 @@ export default function SensorChart({ data }: SensorChartProps) {
   const screenWidth = Dimensions.get('window').width;
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Histórico do Sensor</Text>
+    <View style={{ marginVertical: 10 }}>
       <LineChart
         data={{
-          labels: data.map((_, index) => (index + 1).toString()),
+          labels: data.map((_, index) => index.toString()), // Índices como rótulo
           datasets: [{ data }],
         }}
-        width={screenWidth - 40} // largura do gráfico
+        width={screenWidth - 32}
         height={220}
+        yAxisLabel=""
         yAxisSuffix=""
         chartConfig={{
-          backgroundColor: '#007BFF',
+          backgroundColor: '#1E1E1E',
           backgroundGradientFrom: '#007BFF',
           backgroundGradientTo: '#00BFFF',
           decimalPlaces: 0,
           color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          style: { borderRadius: 16 },
+          labelColor: () => '#FFFFFF',
           propsForDots: {
-            r: '4',
-            strokeWidth: '2',
+            r: '3',
+            strokeWidth: '1',
             stroke: '#fff',
           },
         }}
         bezier
-        style={styles.chart}
+        style={{
+          borderRadius: 16,
+          marginHorizontal: 16,
+        }}
       />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginVertical: 16,
-    alignItems: 'center',
-  },
-  chart: {
-    borderRadius: 16,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 8,
-  },
-});

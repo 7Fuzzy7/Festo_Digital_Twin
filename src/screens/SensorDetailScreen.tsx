@@ -1,62 +1,66 @@
-// src/screens/SensorDetailScreen.tsx
-import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
+import { LinearGradient } from 'expo-linear-gradient';
 import SensorChart from '../components/SensorChart';
-import SensorInfo from '../components/SensorInfo';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SensorDetail'>;
 
 export default function SensorDetailScreen({ route, navigation }: Props) {
-  const { id } = route.params;
-  const [sensorData, setSensorData] = useState<number[]>([]);
-  const [status, setStatus] = useState<string>('Ativo');
+    const { id, name } = route.params;
 
-  useEffect(() => {
-    // Simular histórico de dados
-    const data = Array.from({ length: 10 }, () => Math.floor(Math.random() * 100));
-    setSensorData(data);
-  }, []);
+    // Dados simulados para o gráfico
+    const historyData = Array.from({ length: 10 }, () => Math.floor(Math.random() * 100));
 
-  return (
-    <ScrollView style={styles.container}>
-      {/* Botão Voltar */}
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Text style={styles.backButtonText}>◀ Voltar</Text>
-      </TouchableOpacity>
+    return (
+        <LinearGradient
+            colors={['#001F3F', '#003366']}
+            style={styles.container}
+        >
+            <Text style={styles.title}>{name}</Text>
 
-      {/* Gráfico */}
-      <SensorChart data={sensorData} />
+            <SensorChart data={historyData} />
 
-      {/* Informações do sensor */}
-      <SensorInfo
-        id={id}
-        name={`Sensor #${id}`}
-        status={status}
-        lastUpdated={new Date().toLocaleString()}
-      />
-    </ScrollView>
-  );
+            <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => navigation.goBack()}
+            >
+                <Text style={styles.backButtonText}>← Voltar</Text>
+            </TouchableOpacity>
+        </LinearGradient>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#001F3F',
-  },
-  backButton: {
-    marginTop: 20,
-    marginLeft: 16,
-    backgroundColor: '#0052cc',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-    alignSelf: 'flex-start',
-  },
-  backButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 14,
-  },
+    container: {
+        flex: 1,
+        paddingHorizontal: 16,
+        paddingTop: 60,
+    },
+    title: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#FFFFFF',
+        textAlign: 'center',
+        marginBottom: 20,
+    },
+    backButton: {
+        marginTop: 20,
+        alignSelf: 'center',
+        backgroundColor: '#FFFFFF',
+        paddingVertical: 12,
+        paddingHorizontal: 25,
+        borderRadius: 25,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    backButtonText: {
+        fontSize: 16,
+        color: '#001F3F',
+        fontWeight: 'bold',
+    },
 });
