@@ -76,8 +76,11 @@ CORS liberado globalmente para consumo pelo frontend:
 
 | Nome completo          | RM        |
 |------------------------|-----------|
-| Karoline Martins de Almeida | RM: _preencha aqui_ |
-| _Outros (se houver)_   | RM: _xxxx_ |
+| Pedro Martins| RM: 98663 |
+| Murilo Pomin | RM: 99683 |
+| Gabriel Taboada | RM: 97957 |
+| Daniel Menezes | RM: 551398 |
+| Luiz Augusto Melki | RM: 552053 |
 
 ---
 
@@ -100,13 +103,6 @@ Festo_Digital_Twin/
 ├── frontend/
 └── README.md
 ```
-## Integrantes
-- Murilo Pomin (RM: 99683)
-- Gabriel Taboada (RM: 97957)
-- Daniel Menezes (RM: 551398)
-- Luiz Augusto Melki (RM: 552053)
-- Pedro Martins (RM: 98663)
-
 ---
 
 ✅ Projeto 100% funcional e testado com Postman.
